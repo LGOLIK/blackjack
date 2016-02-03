@@ -14,7 +14,7 @@ var deck = {
 }
 
 // card constructor
-function Card(suit, val) {
+function Card(suit, val ) {
   this.val = val;
   this.suit = suit;
   this.points = 0;
@@ -33,4 +33,17 @@ Card.prototype.calcPoints = function() {
       this.points = parseInt(this.val);
   }
   console.log(this.points);
+}; // end of card constructor and prototypes
+
+// hand constructor
+function Hand() {
+  this.cards = []; // to store an array of card objects
+  this.points = 0; // to store the running total of points on the hand
+  this.hits = 0; // to keep track of the number of hits made
+}
+
+// add card to the array of cards, card being passed through is a newly created card object
+Hand.prototype.addCard = function(card) {
+  this.cards.push(card);
+  console.log(this.cards);
 };
