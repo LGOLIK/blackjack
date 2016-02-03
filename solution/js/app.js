@@ -34,7 +34,7 @@ function Card(suit, val) {
   this.points = cardPoints(val);
 }
 
-// hand constructor
+// hand constructor - dealer or player will pass through this hand when called
 function Hand() {
   this.cards = []; // to store an array of card objects
   this.points = 0; // to store the running total of points on the hand
@@ -53,3 +53,41 @@ Hand.prototype.calcPoints = function() {
   this.points += this.cards[cardIndex].points;
   console.log(this.points);
 };
+
+// count the amount of hits done on the hand
+// may not be needed
+Hand.prototype.setHits = function () {
+  this.hits++;
+};
+
+// check for a bust
+Hand.prototype.bust = function () {
+  if (this.points > 21) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+// check for a blackjack
+Hand.prototype.blackjack = function () {
+  if (this.points === 21) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+// check if the hand is playable
+// rule is different for the dealer vs the player
+Hand.prototype.playable = function(player) {
+  if ((player === 'dealer') && (this.points < 17)) {
+    return true;
+  } if ((player !== 'dealer') && (this.points < 21)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+// end of hand object and prototypes //
