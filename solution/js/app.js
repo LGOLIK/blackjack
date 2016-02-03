@@ -13,27 +13,26 @@ var deck = {
   clubs: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 }
 
-// card constructor
-function Card(suit, val ) {
-  this.val = val;
-  this.suit = suit;
-  this.points = 0;
-}
-
-// determine the point value of each card getting generated and store it on the card
-Card.prototype.calcPoints = function() {
-  switch (this.val) {
+// function to determine the points a card is worth
+function cardPoints(card) {
+  switch (card) {
     case 'J': case 'Q': case 'K':
-      this.points = 10;
+      return 10;
       break;
     case 'A':
-      this.points = 11;
+      return 11;
       break;
     default: // the remainder of cards are 1 - 10 and are worth the numerical value
-      this.points = parseInt(this.val);
+      return parseInt(card);
   }
-  console.log(this.points);
-}; // end of card constructor and prototypes
+}
+
+// card constructor
+function Card(suit, val) {
+  this.val = val;
+  this.suit = suit;
+  this.points = cardPoints(val);
+}
 
 // hand constructor
 function Hand() {
@@ -45,5 +44,12 @@ function Hand() {
 // add card to the array of cards, card being passed through is a newly created card object
 Hand.prototype.addCard = function(card) {
   this.cards.push(card);
-  console.log(this.cards);
+};
+
+// add the points on the card object to the hand points
+Hand.prototype.calcPoints = function() {
+  // last card in the array is the last card dealt
+  var cardIndex = (this.cards.length) - 1;
+  this.points += this.cards[cardIndex].points;
+  console.log(this.points);
 };
