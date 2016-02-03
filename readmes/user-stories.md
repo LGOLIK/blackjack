@@ -18,6 +18,7 @@ This will be a website where you can play blackjack against the dealer and accum
 
 ## at the initial game outset
 - bet amount is subtracted from the bank and added to the bet
+- the deck is shuffled and generated in a new array
 - the dealer and player are each dealt 2 cards out of a deck of 52 cards
 - the player's 2 cards are dealt face up, while the dealer is dealt the first card up, the second card down
 - if either the dealer or player has 21 after the first play, the game ends and shows results
