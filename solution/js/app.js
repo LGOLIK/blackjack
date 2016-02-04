@@ -5,13 +5,20 @@ $(function() {
 
 // functions and object constructors go here
 
-// here is a deck to use - may not be needed
-var deck = {
-  hearts: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
-  diamonds: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
-  spades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
-  clubs: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-}
+// function to build a new deck of card objects
+function makeDeck() {
+  var names = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+  var suits = ['clubs', 'diamonds', 'hearts', 'spades'];
+
+  var deck = []; // initialize the deck
+  for (var x = 0; x < suits.length; x++) {
+    for (var y = 0; y < names.length; y++) {
+      var card = new Card(suits[x], names[y]);
+      deck.push(card);
+    }
+  }
+  return deck
+} // end of make dack
 
 // function to determine the points a card is worth
 function cardPoints(card) {
@@ -27,7 +34,7 @@ function cardPoints(card) {
   }
 }
 
-// card constructor
+// card objects constructor
 function Card(suit, val) {
   this.val = val;
   this.suit = suit;
