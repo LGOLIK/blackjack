@@ -39,6 +39,7 @@ function Hand() {
   this.cards = []; // to store an array of card objects
   this.points = 0; // to store the running total of points on the hand
   this.hits = 0; // to keep track of the number of hits made
+  this.stay = false; // a place to store whether the hand is at stay state. initially set to false
 }
 
 // add card to the array of cards, card being passed through is a newly created card object
@@ -52,6 +53,11 @@ Hand.prototype.calcPoints = function() {
   var cardIndex = (this.cards.length) - 1;
   this.points += this.cards[cardIndex].points;
   console.log(this.points);
+};
+
+// set stay to true
+Hand.prototype.setStay = function() {
+  this.stay = true;
 };
 
 // count the amount of hits done on the hand
@@ -91,3 +97,5 @@ Hand.prototype.playable = function(player) {
 };
 
 // end of hand object and prototypes //
+
+// game
