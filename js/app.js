@@ -128,11 +128,11 @@ Hand.prototype.playable = function() {
 var game = {
   player: '', // will store a hand object
   dealer: '', // will store another hand object
-  currHand: [],
+  // currHand: [],
   deck: [], // initially a blank array
   winner: '', // will store the winner (1 or 0)
   loser: '', // will store the loser
-  playable: true, // keeps track of the state of the game, if it can continue play
+  // playable: true, // keeps track of the state of the game, if it can continue play
   // start the game function
   start: function() {
     // create new hand objects for the player and dealer
@@ -184,7 +184,7 @@ var game = {
     } else if (this.dealer.blackjack) { // if player has blackjack
       this.winner = 0; // dealer is the winner
     }
-  },
+  }, // end of blackjack
   bust: function(p) {
     // determine winner, based whether a player has busted
     p.isBust(); // check the hand for a bust
@@ -197,7 +197,22 @@ var game = {
         this.winner = this.currPlayer;
       }
     }
-  }
+  }, // end of bust
+  isWinner: function() { // this should only be called after a dealer stay
+    var player = this.player.points;
+    var dealer = this.dealer.points;
+
+    if (player > dealer) {
+      this.winner = 1;
+      this.loser = 0;
+    } else if (player < dealer) {
+      this.winner = 0;
+      this.loser = 1;
+    } else { // there's a tie
+      this.winner = this.currPlayer; // set to -1
+      this.loser = this.currPlayer; // set to -1
+    }
+  } // end of iswinner
 } // end of game object
 
 // test the game object
