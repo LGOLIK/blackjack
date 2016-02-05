@@ -124,7 +124,7 @@ var game = {
   start: function() {
     // create new hand objects for the player and dealer
     this.player = new Hand(1);
-    this.dealer = new Hand(2);
+    this.dealer = new Hand(0);
     this.currPlayer = 1; // set the curr player indicator
     this.winner = ''; // reset the winner
     this.loser = ''; // reset the loser
@@ -156,7 +156,7 @@ var game = {
     // change the hand stay status to true
     p.setStay();
     // change current player to the dealer
-    this.currPlayer --; // subtract 1 from the curr player (1) to get to the dealer (0)
+    this.currPlayer--; // subtract 1 from the curr player (1) to get to the dealer (0)
   },
   blackjack: function() {
     // check for blackjack on all players
@@ -179,7 +179,7 @@ var game = {
     p.isBust(); // check the hand for a bust
     if (p.bust) {
       this.loser = this.currPlayer; // the person who just hit loses
-      this.currPlayer --; // move to the next player
+      this.currPlayer--; // move to the next player
       if (this.currPlayer === -1) { // the dealer just busted
         this.winner = 1; // winner equals the player
       } else if (this.currPlayer === 0) { // the player just busted
@@ -211,7 +211,7 @@ var game = {
     this.bust(this.dealer);
     // if the dealer didn't bust, check for winner
     if (this.winner === '') {
-      this.currPlayer --; // here we are setting the curr player to -1
+      this.currPlayer--; // here we are setting the curr player to -1
       this.isWinner();
     }
   } // end of dealer moves}
