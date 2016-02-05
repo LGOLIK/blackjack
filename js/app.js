@@ -95,12 +95,6 @@ Hand.prototype.setStay = function() {
   this.stay = true;
 };
 
-// count the amount of hits done on the hand
-// may not be needed
-Hand.prototype.setHits = function () {
-  this.hits++;
-};
-
 // check for a bust
 Hand.prototype.isBust = function () {
   if (this.points > 21) {
@@ -133,7 +127,6 @@ Hand.prototype.playable = function() {
 var game = {
   player: '', // will store a hand object
   dealer: '', // will store another hand object
-  currPlayer: '', // 1 signifies that it's the player's turn. starts this way initially. dealer will be determined by value 0
   currHand: [],
   deck: [], // initially a blank array
   winner: '', // will store the winner (1 or 0)
@@ -143,37 +136,41 @@ var game = {
     this.player = new Hand(1);
     this.dealer = new Hand(2);
     this.currPlayer = 1; // set the curr player indicator
-    this.currHand = this.player; // current hand is the player hand
     this.deck = makeDeck(); // make and shuffle a new deck
     this.hit(this.player); // deal the player
     this.hit(this.dealer); // then deal the dealer
     this.hit(this.player); // deal the player again
     this.hit(this.dealer); // then deal the dealer
-  },
+    console.log('after the game starts...');
+    console.log('the current player: ' + game.currPlayer);
+    console.log('deck count: ' + game.deck.length);
+    console.log('points on the player hand: ' + game.player.points);
+    console.log('hits on the player hand: ' + game.player.hits);
+    console.log('points on the dealer hand: ' + game.dealer.points);
+    console.log('hits on the dealer hand: ' + game.dealer.hits);
+  }, // end of start game
   // deal a card
   hit: function(p) {
     // get the first card from the deck
     var card = this.deck.shift();
     p.addCard(card); // add card
-    p.calcPoints(); // calc points
-    if (p.cards.length > 2) { // add to hit count if more than 2 cards
+    p.calcPoints(); // calc points on the hand
+    if (p.cards.length > 2) { // add to hit count if more than 2 cards on the hand
       p.hits ++;
     }
+  }, // end of hit
+  // stay
+  stay: function(p) {
+    // change the hand stay status to true
+    p.setStay();
+    // change current player to the dealer
+    this.currPlayer --; // subtract 1 from the curr player (1) to get to the dealer (0)
   }
-}
-// end of game object
+} // end of game object
 
 // test the game object
-var newGame = game.start();
-console.log('the player object: ' + game.player);
-console.log('the dealer object: ' + game.dealer);
-console.log('the current player: ' + game.currPlayer);
-console.log('the current hand: ' + game.currPlayer);
-console.log('the deck: ' + game.deck);
-console.log('the player cards array: ' + game.player.cards);
-console.log('the player card 1: ' + game.player.cards[0]);
-console.log('deck count: ' + game.deck.length);
-console.log('points on the player hand: ' + game.player.points);
-console.log('hits on the player hand: ' + game.player.hits);
-console.log('points on the dealer hand: ' + game.dealer.points);
-console.log('hits on the dealer hand: ' + game.dealer.hits);
+// game.start();
+// game.hit(game.player);
+// game.hit(game.dealer);
+// game.stay(game.player);
+// game.stay(game.dealer);
