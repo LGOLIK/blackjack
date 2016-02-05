@@ -23,16 +23,13 @@ function makeDeck() {
     }
   }
   // at this point, there's an ordered deck array
-  console.log(deck);
   // now shuffle the deck
   var shuffled = [];
   shuffled = shuffle(deck);
-  console.log(shuffled);
-  // return shuffled;
+  return shuffled;
 } // end of make deck
 
 // function to shuffle an array into a random order
-// pulled from https://www.frankmitchell.org/2015/01/fisher-yates/
 // fisher yates shuffle
 function shuffle(arr) {
   var x = 0;
@@ -47,12 +44,6 @@ function shuffle(arr) {
   }
 
   return arr;
-  // for (x = arr.length - 1; x > 0; x -= 1) {
-  //   y = Math.floor(Math.random() * (x + 1))
-  //   temp = arr[x]
-  //   arr[x] = arr[y]
-  //   arr[y] = temp
-  // }
 }
 
 // function to determine the points a card is worth
@@ -97,7 +88,6 @@ Hand.prototype.calcPoints = function() {
   // last card in the array is the last card dealt
   var cardIndex = (this.cards.length) - 1;
   this.points += this.cards[cardIndex].points;
-  console.log(this.points);
 };
 
 // set stay to true
@@ -129,7 +119,7 @@ Hand.prototype.isBlackjack = function () {
 // rule is different for the dealer vs the player
 // player being passed through is the current player from the game object
 Hand.prototype.playable = function() {
-  if ((this.player === 2) && (this.points < 17)) { // if it's the dealer
+  if ((this.player === 0) && (this.points < 17)) { // if it's the dealer
     return true;
   } if ((this.player === 1) && (this.points < 21)) { // if it's the player
     return true;
@@ -143,14 +133,32 @@ Hand.prototype.playable = function() {
 var game = {
   player: '', // will store a hand object
   dealer: '', // will store another hand object
-  currPlayer: '', // 1 signifies that it's the player's turn. starts this way initially. dealer will be determined by value 2
-  winner: '', // will store the winner (1 or 2)
+  currPlayer: '', // 1 signifies that it's the player's turn. starts this way initially. dealer will be determined by value 0
+  currHand: [],
+  deck: [], // initially a blank array
+  winner: '', // will store the winner (1 or 0)
   playable: true, // keeps track of the state of the game, if it can continue play
   // start the game function
   start: function() {
     this.player = new Hand(1);
     this.dealer = new Hand(2);
-    this.currPlayer = 1;
+    this.currPlayer = 1; // set the curr player indicator
+    this.currHand = this.player; // current hand is the player hand
+    this.deck = makeDeck(); // make and shuffle a new deck
+    this.hit(this.player); // deal the player
+    this.hit(this.dealer); // then deal the dealer
+    this.hit(this.player); // deal the player again
+    this.hit(this.dealer); // then deal the dealer
+  },
+  // deal a card
+  hit: function(p) {
+    // get the first card from the deck
+    var card = this.deck.shift();
+    p.addCard(card); // add card
+    p.calcPoints(); // calc points
+    if (p.cards.length > 2) { // add to hit count if more than 2 cards
+      p.hits ++;
+    }
   }
 }
 // end of game object
@@ -160,3 +168,12 @@ var newGame = game.start();
 console.log('the player object: ' + game.player);
 console.log('the dealer object: ' + game.dealer);
 console.log('the current player: ' + game.currPlayer);
+console.log('the current hand: ' + game.currPlayer);
+console.log('the deck: ' + game.deck);
+console.log('the player cards array: ' + game.player.cards);
+console.log('the player card 1: ' + game.player.cards[0]);
+console.log('deck count: ' + game.deck.length);
+console.log('points on the player hand: ' + game.player.points);
+console.log('hits on the player hand: ' + game.player.hits);
+console.log('points on the dealer hand: ' + game.dealer.points);
+console.log('hits on the dealer hand: ' + game.dealer.hits);
