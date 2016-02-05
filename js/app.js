@@ -121,6 +121,7 @@ Hand.prototype.playable = function() {
     return false;
   }
 };
+
 // end of hand object and prototypes //
 
 // game object
@@ -130,6 +131,7 @@ var game = {
   currHand: [],
   deck: [], // initially a blank array
   winner: '', // will store the winner (1 or 0)
+  loser: '', // will store the loser
   playable: true, // keeps track of the state of the game, if it can continue play
   // start the game function
   start: function() {
@@ -138,6 +140,7 @@ var game = {
     this.dealer = new Hand(2);
     this.currPlayer = 1; // set the curr player indicator
     this.winner = ''; // reset the winner
+    this.loser = ''; // reset the loser
 
     // make and shuffle a new deck
     this.deck = makeDeck();
@@ -150,17 +153,6 @@ var game = {
 
     // check for a blackjack
     this.blackjack();
-
-    console.log('after the game starts...');
-    console.log('the current player: ' + game.currPlayer);
-    console.log('deck count: ' + game.deck.length);
-    console.log('points on the player hand: ' + game.player.points);
-    console.log('hits on the player hand: ' + game.player.hits);
-    console.log('points on the dealer hand: ' + game.dealer.points);
-    console.log('hits on the dealer hand: ' + game.dealer.hits);
-    console.log('player blackjack: ' + game.player.blackjack);
-    console.log('dealer blackjack: ' + game.dealer.blackjack);
-    console.log('winner is: ' + game.winner);
   }, // end of start game
   // deal a card
   hit: function(p) {
@@ -181,15 +173,29 @@ var game = {
   },
   blackjack: function() {
     // check for blackjack on all players
+    // only happens after the first 2 cards are dealt when game starts
     this.player.isBlackjack();
     this.dealer.isBlackjack();
 
     // set a winner if there's a blackjack
     if ((this.player.blackjack && this.dealer.blackjack) || this.player.blackjack ) { // if both winner and player get blackjack, or the player gets blackjack
     // if (this.player.blackjack) { // if both winner and player get blackjack, or the player gets blackjack
-      game.winner = 1; // player is the winner
+      this.winner = 1; // player is the winner
     } else if (this.dealer.blackjack) { // if player has blackjack
-      game.winner = 0; // dealer is the winner
+      this.winner = 0; // dealer is the winner
+    }
+  },
+  bust: function(p) {
+    // determine winner, based whether a player has busted
+    p.isBust(); // check the hand for a bust
+    if (p.bust) {
+      this.loser = this.currPlayer; // the person who just hit loses
+      this.currPlayer --; // move to the next player
+      if (this.currPlayer === -1) { // the dealer just busted
+        this.winner = 1; // winner equals the player
+      } else if (this.currPlayer === 0) { // the player just busted
+        this.winner = this.currPlayer;
+      }
     }
   }
 } // end of game object
