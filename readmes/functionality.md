@@ -65,14 +65,15 @@ functions include
     - shuffle it
   - hit the dealer twice - done
   - hit the player twice - done
-- hit(player)
+- hit(player) - done
   - adds one card to the current player's hand
   - if moves are > 2, it adds a hit count to the player's hand
-- stay(player)
+- stay(player) - done
   - player stay status changes to true
   - current player changes from player to dealer or from dealer to end
-- isBlackjack(player)
+- isBlackjack(player) - done
 - isBust(player)
-- dealerMoves
-- isWinner - checks for the winner
+- isWinner - checks for the winner after both dealer and player stay
   - dealer and player stay = person with higher score wins
+- dealerMoves
+  - while loop
