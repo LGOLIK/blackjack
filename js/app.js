@@ -109,19 +109,6 @@ Hand.prototype.isBlackjack = function () {
   }
 };
 
-// check if the hand is playable
-// rule is different for the dealer vs the player
-// player being passed through is the current player from the game object
-Hand.prototype.playable = function() {
-  if ((this.player === 0) && (this.points < 17)) { // if it's the dealer
-    return true;
-  } if ((this.player === 1) && (this.points < 21)) { // if it's the player
-    return true;
-  } else {
-    return false;
-  }
-};
-
 // end of hand object and prototypes //
 
 // game object
@@ -137,7 +124,7 @@ var game = {
   start: function() {
     // create new hand objects for the player and dealer
     this.player = new Hand(1);
-    this.dealer = new Hand(2);
+    this.dealer = new Hand(0);
     this.currPlayer = 1; // set the curr player indicator
     this.winner = ''; // reset the winner
     this.loser = ''; // reset the loser
@@ -169,7 +156,7 @@ var game = {
     // change the hand stay status to true
     p.setStay();
     // change current player to the dealer
-    this.currPlayer --; // subtract 1 from the curr player (1) to get to the dealer (0)
+    this.currPlayer--; // subtract 1 from the curr player (1) to get to the dealer (0)
   },
   blackjack: function() {
     // check for blackjack on all players
@@ -181,8 +168,10 @@ var game = {
     if ((this.player.blackjack && this.dealer.blackjack) || this.player.blackjack ) { // if both winner and player get blackjack, or the player gets blackjack
     // if (this.player.blackjack) { // if both winner and player get blackjack, or the player gets blackjack
       this.winner = 1; // player is the winner
+      this.loser = 0;
     } else if (this.dealer.blackjack) { // if player has blackjack
       this.winner = 0; // dealer is the winner
+      this.loser = 1;
     }
   }, // end of blackjack
   bust: function(p) {
@@ -190,7 +179,7 @@ var game = {
     p.isBust(); // check the hand for a bust
     if (p.bust) {
       this.loser = this.currPlayer; // the person who just hit loses
-      this.currPlayer --; // move to the next player
+      this.currPlayer--; // move to the next player
       if (this.currPlayer === -1) { // the dealer just busted
         this.winner = 1; // winner equals the player
       } else if (this.currPlayer === 0) { // the player just busted
@@ -212,12 +201,18 @@ var game = {
       this.winner = this.currPlayer; // set to -1
       this.loser = this.currPlayer; // set to -1
     }
-  } // end of iswinner
+  }, // end of iswinner
+  dealerMoves: function() {
+    // hit while the dealer hand point value is less than 17 and the dealer has made less than 5 hits
+    while (this.dealer.points < 17 && this.dealer.hits < 5) {
+      this.hit(this.dealer);
+    }
+    // check for bust
+    this.bust(this.dealer);
+    // if the dealer didn't bust, check for winner
+    if (this.winner === '') {
+      this.currPlayer--; // here we are setting the curr player to -1
+      this.isWinner();
+    }
+  } // end of dealer moves}
 } // end of game object
-
-// test the game object
-// game.start();
-// game.hit(game.player);
-// game.hit(game.dealer);
-// game.stay(game.player);
-// game.stay(game.dealer);
