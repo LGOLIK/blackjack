@@ -31,6 +31,7 @@ function makeDeck() {
 
 // function to shuffle an array into a random order
 // fisher yates shuffle
+// answer inferred from http://www.brainjar.com/js/cards/default2.asp
 function shuffle(arr) {
   var x = 0;
   var y = 0;
@@ -42,7 +43,6 @@ function shuffle(arr) {
     arr[x] = arr[y];
     arr[y] = temp;
   }
-
   return arr;
 }
 
@@ -69,7 +69,7 @@ function Card(suit, val) {
 
 // hand constructor - dealer or player will pass through this hand when called
 function Hand(player) {
-  this.player = player; // will store 1 to signify player, or 2 to signify dealer
+  this.player = player; // will store 1 to signify player, or 0 to signify dealer
   this.cards = []; // to store an array of card objects
   this.points = 0; // to store the running total of points on the hand
   this.hits = 0; // to keep track of the number of hits made
@@ -104,7 +104,7 @@ Hand.prototype.isBust = function () {
 
 // check for a blackjack
 Hand.prototype.isBlackjack = function () {
-  if (this.points === 21) {
+  if ((this.points === 21) && (this.cards.length === 2)) {
     this.blackjack = true;
   }
 };
@@ -133,14 +133,24 @@ var game = {
   playable: true, // keeps track of the state of the game, if it can continue play
   // start the game function
   start: function() {
+    // create new hand objects for the player and dealer
     this.player = new Hand(1);
     this.dealer = new Hand(2);
     this.currPlayer = 1; // set the curr player indicator
-    this.deck = makeDeck(); // make and shuffle a new deck
+    this.winner = ''; // reset the winner
+
+    // make and shuffle a new deck
+    this.deck = makeDeck();
+
+    // deal the cards out
     this.hit(this.player); // deal the player
     this.hit(this.dealer); // then deal the dealer
     this.hit(this.player); // deal the player again
     this.hit(this.dealer); // then deal the dealer
+
+    // check for a blackjack
+    this.blackjack();
+
     console.log('after the game starts...');
     console.log('the current player: ' + game.currPlayer);
     console.log('deck count: ' + game.deck.length);
@@ -148,6 +158,9 @@ var game = {
     console.log('hits on the player hand: ' + game.player.hits);
     console.log('points on the dealer hand: ' + game.dealer.points);
     console.log('hits on the dealer hand: ' + game.dealer.hits);
+    console.log('player blackjack: ' + game.player.blackjack);
+    console.log('dealer blackjack: ' + game.dealer.blackjack);
+    console.log('winner is: ' + game.winner);
   }, // end of start game
   // deal a card
   hit: function(p) {
@@ -165,6 +178,19 @@ var game = {
     p.setStay();
     // change current player to the dealer
     this.currPlayer --; // subtract 1 from the curr player (1) to get to the dealer (0)
+  },
+  blackjack: function() {
+    // check for blackjack on all players
+    this.player.isBlackjack();
+    this.dealer.isBlackjack();
+
+    // set a winner if there's a blackjack
+    if ((this.player.blackjack && this.dealer.blackjack) || this.player.blackjack ) { // if both winner and player get blackjack, or the player gets blackjack
+    // if (this.player.blackjack) { // if both winner and player get blackjack, or the player gets blackjack
+      game.winner = 1; // player is the winner
+    } else if (this.dealer.blackjack) { // if player has blackjack
+      game.winner = 0; // dealer is the winner
+    }
   }
 } // end of game object
 
