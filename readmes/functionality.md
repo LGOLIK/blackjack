@@ -52,4 +52,27 @@ Should have the following properties
 - a dealer
 - a current player
 - a winner
-- a new deck array (multidimensional?)
+- playable
+- a deck of cards
+
+functions include
+- start game
+  - create player hand object - done
+  - create dealer hand object - done
+  - set current player to player - done
+  - shuffle the deck *** - done
+    - build a new deck
+    - shuffle it
+  - hit the dealer twice - done
+  - hit the player twice - done
+- hit(player)
+  - adds one card to the current player's hand
+  - if moves are > 2, it adds a hit count to the player's hand
+- stay(player)
+  - player stay status changes to true
+  - current player changes from player to dealer or from dealer to end
+- isBlackjack(player)
+- isBust(player)
+- dealerMoves
+- isWinner - checks for the winner
+  - dealer and player stay = person with higher score wins
