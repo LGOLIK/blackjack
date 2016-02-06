@@ -24,7 +24,32 @@ function $startGame() {
   $('.player-header').append("<h5>Your cards</h5>");
 
   // deal the 2 cards in alternating order on the page
+  var hands = game.players;
+  var currPlayer = game.players.length-1;
+  var dealer = currPlayer-1;
+  var firstCard = game.players[currPlayer].cards[0];
 
+  // player first card
+  var firstName = hands[currPlayer].cards[0].val;
+  var firstSuit = hands[currPlayer].cards[0].suit;
+  $dealCard(currPlayer, firstName, firstSuit);
+
+  // dealer first card
+  var secondName = hands[dealer].cards[0].val;
+  var secondSuit = hands[dealer].cards[0].suit;
+  $dealCard(dealer, secondName, secondSuit);
+
+  // player second card
+  var thirdName = hands[currPlayer].cards[1].val;
+  var thirdSuit = hands[currPlayer].cards[1].suit;
+  $dealCard(currPlayer, thirdName, thirdSuit);
+
+  // dealer second card
+  var fourthName = hands[dealer].cards[1].val;
+  var fourthSuit = hands[dealer].cards[1].suit;
+  $dealCard(dealer, fourthName, fourthSuit);
+
+  // next step is to present the status and action buttons
 
 } // end $start
 
@@ -40,9 +65,10 @@ function $startBank(bet, bank) {
 } // end $startBank
 
 // this function is used at the start of a game, as well as when a card is being hit
-// p is the hand of the player being dealt
-function $dealCard(p) {
-  //
+// p is the number signifying the player, n is the name of the card, s is the suit of the card
+function $dealCard(p, n, s) {
+  // add formatted card elements to the id of the player
+  $("<div>").appendTo('#' + p).attr("class", "card").addClass(s).addClass(n).append("<p>" + n + "&" + s + ";</p>");
 } // end $dealCard
 
 
@@ -104,8 +130,8 @@ function Card(suit, val) {
 }
 
 // hand constructor - dealer or player will pass through this hand when called
-function Hand() {
-  // this.player = player; // will store 1 to signify player, or 0 to signify dealer
+function Hand(p) {
+  this.player = p; // will store 1 to signify player, or 0 to signify dealer
   this.cards = []; // to store an array of card objects
   this.points = 0; // to store the running total of points on the hand
   this.hits = 0; // to keep track of the number of hits made
@@ -160,8 +186,8 @@ var game = {
     // create new hand objects for the player and dealer
     // this.player = new Hand(1);
     // this.dealer = new Hand(0);
-    this.players.push(new Hand()); // dealer
-    this.players.push(new Hand()); // player
+    this.players.push(new Hand(0)); // dealer
+    this.players.push(new Hand(1)); // player
     this.currPlayer = this.players.length-1; // set the curr player indicator to the last player in the array
     this.winner = ''; // reset the winner
     this.loser = ''; // reset the loser
