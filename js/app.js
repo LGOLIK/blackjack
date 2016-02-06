@@ -1,24 +1,40 @@
 $(function() {
   console.log('app.js linked');
+
   // hide the make play and end buttons once the page is loaded
   $('.play').hide();
   $('.end').hide();
-  // $('.dealer').hide();
-  // $('.player').hide();
+
+  // when one of the bet buttons is clicked, start the game
+  $('.bet').on('click', $startGame);
 
 });
 
 // functions and object constructors go here
 
-// function to make a random number, with a min and max value
-function randNum(min, max) {
-  return Math.ceil(Math.random() * (max - min)) + min;
+function $startGame() {
+  event.stopProbagation;
+  var bet = parseInt($(this).val()); // bet is the value of the button clicked
+  var bank = parseInt($('#bankAmt').text()); // bank is the amount in the bank box
+  $startBank(bet, bank);
+
+} // end $start
+
+// function to update the bet and bank at the start of the game
+function $startBank(bet, bank) {
+  if (bet < bank) {
+    bank -= bet; // subtract the bet from the bank
+    $('#betAmt').text(bet); // place the bet amount on the bet view
+    $('#bankAmt').text(bank); // place the updated bank amount on the bank view
+  } else {
+    alert("You don't have enough money to do that. Go home!")
+  }
 }
 
 // function to build a new deck of card objects
 function makeDeck() {
   var names = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-  var suits = ['clubs', 'diamonds', 'hearts', 'spades'];
+  var suits = ['clubs', 'diamond', 'hearts', 'spades'];
 
   var deck = []; // initialize the deck
   for (var x = 0; x < suits.length; x++) {
@@ -120,11 +136,9 @@ Hand.prototype.isBlackjack = function () {
 var game = {
   player: '', // will store a hand object
   dealer: '', // will store another hand object
-  // currHand: [],
   deck: [], // initially a blank array
   winner: '', // will store the winner (1 or 0)
   loser: '', // will store the loser
-  // playable: true, // keeps track of the state of the game, if it can continue play
   // start the game function
   start: function() {
     // create new hand objects for the player and dealer
