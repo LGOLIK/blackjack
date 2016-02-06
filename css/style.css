@@ -1,0 +1,67 @@
+body {
+  background-image: url(../images/background.jpg);
+}
+
+h1, h2, h3, h4, h5, h6, .bank {
+  color: #FFFFF2;
+}
+
+.button-primary {
+  background-color: rgb(160, 0, 0) !important;
+}
+
+/*.chip {
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+  line-height: 40px;
+  background-color: rgb(160, 0, 0);
+  text-align: center;
+  display: inline-block;
+}*/
+
+#betAmt, #bankAmt {
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  background-color: #FFFFF2;
+  /*background-color: rgb(255, 232, 122);*/
+  display: inline-block;
+  color: black;
+  position: relative;
+  border-radius: 5px;
+  margin: 10px;
+  font-size: 20px;
+}
+
+/*credit for card format goes to http://designshack.net/articles/css/css-card-tricks/*/
+.card {
+  position: relative;
+  float: left;
+  margin-right: 15px;
+  width: 75px;
+  height: 100px;
+  border-radius: 10px;
+  background: #fff;
+  -webkit-box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+  box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+  color: black;
+  margin-bottom: 10px;
+}
+
+.card p {
+  text-align: center;
+  font: 40px/100px Helvetica, Arial, sans-serif;
+  color: black
+}
+
+/*credit for card format goes to http://designshack.net/articles/css/css-card-tricks/*/
+
+.diamond p, .hearts p {
+  color: red;
+}
+
+.clubs p, .spades p {
+  color: black;
+}
