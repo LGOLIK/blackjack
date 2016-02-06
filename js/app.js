@@ -68,6 +68,7 @@ function $startBank(bet, bank) {
 // p is the number signifying the player, n is the name of the card, s is the suit of the card
 function $dealCard(p, n, s) {
   // add formatted card elements to the id of the player
+  // assigning each newly created div class of card and suit to make sure they are unique items that a child can be appended to
   $("<div>").appendTo('#' + p).attr("class", "card").addClass(s).addClass(n).append("<p>" + n + "&" + s + ";</p>");
 } // end $dealCard
 
