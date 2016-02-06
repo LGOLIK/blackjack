@@ -10,16 +10,6 @@ h1, h2, h3, h4, h5, h6, .bank {
   background-color: rgb(160, 0, 0) !important;
 }
 
-/*.chip {
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
-  line-height: 40px;
-  background-color: rgb(160, 0, 0);
-  text-align: center;
-  display: inline-block;
-}*/
-
 #betAmt, #bankAmt {
   width: 70px;
   height: 70px;
@@ -33,6 +23,13 @@ h1, h2, h3, h4, h5, h6, .bank {
   border-radius: 5px;
   margin: 10px;
   font-size: 20px;
+}
+
+.bankroll {
+  position: absolute;
+  display: inline-block;
+  left: 196px;
+  top: 32px;
 }
 
 /*credit for card format goes to http://designshack.net/articles/css/css-card-tricks/*/
