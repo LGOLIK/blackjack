@@ -1,6 +1,11 @@
 $(function() {
   console.log('app.js linked');
-  // game play section will go here
+  // hide the make play and end buttons once the page is loaded
+  $('.play').hide();
+  $('.end').hide();
+  // $('.dealer').hide();
+  // $('.player').hide();
+
 });
 
 // functions and object constructors go here

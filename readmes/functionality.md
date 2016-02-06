@@ -72,8 +72,8 @@ functions include
   - player stay status changes to true
   - current player changes from player to dealer or from dealer to end
 - isBlackjack(player) - done
-- isBust(player)
-- isWinner - checks for the winner after both dealer and player stay
+- isBust(player) - done
+- isWinner - checks for the winner after both dealer and player stay - done
   - dealer and player stay = person with higher score wins
-- dealerMoves
+- dealerMoves - done
   - while loop
