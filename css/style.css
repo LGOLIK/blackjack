@@ -2,7 +2,7 @@ body {
   background-image: url(../images/background.jpg);
 }
 
-h1, h2, h3, h4, h5, h6, .bank {
+h1, h2, h3, h4, h5, h6 {
   color: #FFFFF2;
 }
 
@@ -10,13 +10,16 @@ h1, h2, h3, h4, h5, h6, .bank {
   background-color: rgb(160, 0, 0) !important;
 }
 
+#message {
+  color: #ffffa8;
+}
+
 #betAmt, #bankAmt {
   width: 70px;
   height: 70px;
   line-height: 70px;
   text-align: center;
-  background-color: #FFFFF2;
-  /*background-color: rgb(255, 232, 122);*/
+  background-color: #ffffa8;
   display: inline-block;
   color: black;
   position: relative;
@@ -25,10 +28,15 @@ h1, h2, h3, h4, h5, h6, .bank {
   font-size: 20px;
 }
 
+.bank {
+  color: #FFF;
+  font-size: 16px;
+}
+
 .bankroll {
   position: absolute;
   display: inline-block;
-  left: 196px;
+  left: 230px;
   top: 32px;
 }
 
@@ -50,7 +58,7 @@ h1, h2, h3, h4, h5, h6, .bank {
 .card p {
   text-align: center;
   font: 40px/100px Helvetica, Arial, sans-serif;
-  color: black
+  color: black;
 }
 
 /*credit for card format goes to http://designshack.net/articles/css/css-card-tricks/*/
