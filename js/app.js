@@ -40,7 +40,6 @@ function $startGame() {
   var bet = parseInt($(this).val()); // bet is the value of the button clicked
   var bank = parseInt($('#bankAmt').text()); // bank is the amount in the bank box
   $startBank(bet, bank);
-  $('.bet').hide(); // hide the bet buttons
   // add the player and dealer headers
   $('.dealer-header').append("<h5>Dealer's cards</h5>");
   $('.player-header').append("<h5>Your cards</h5>");
@@ -82,6 +81,7 @@ function $startBank(bet, bank) {
     bank -= bet; // subtract the bet from the bank
     $('#betAmt').text(bet); // place the bet amount on the bet view
     $('#bankAmt').text(bank); // place the updated bank amount on the bank view
+    $('.bet').hide(); // hide the bet buttons
   } else {
     alert("You don't have enough money to do that. Go home!")
   }
@@ -121,9 +121,9 @@ function $endBank(winner, winnerID, bank, bet) {
 
 // function to display end game message based on various scenarios.
 function $endMessage(winner, winnerID, loser, loserID, bank, bet) {
-  if (winnerID > 0 && game.players[winnerID].blackjack) { // player got a blackjack
-    $('#message').text('Awesome! You got a blackjack! You win 3 to 2 on your bet. Keep the money rolling and play again!');
-  } else if (winnerID === 0 && game.players[winnerID].blackjack) { // dealer got a blackjack
+  if (winnerID > 0 && winner.blackjack) { // player got a blackjack
+    $('#message').text('Awesome! You got a blackjack! You win ' + bet + '. Keep the money rolling and play again!');
+  } else if (winnerID === 0 && winner.blackjack) { // dealer got a blackjack
     $('#message').text('Ugh! The dealer got a blackjack! Keep on playing anyways!');
   } else if (loserID > 0 && loser.bust) { // player busted
     $('#message').text('Well that sucks! You busted. Try making up for it by playing again!');
@@ -257,10 +257,15 @@ function Hand(p) {
   this.stay = false; // a place to store whether the hand is at stay state. initially set to false
   this.bust = false; // initially set bust to false
   this.blackjack = false; // initially set blackjack to false
+  this.hasAce = false; // an indicator to check for an Ace on the hand, initially set to 0
 }
 
 // add card to the array of cards, card being passed through is a newly created card object
 Hand.prototype.addCard = function(card) {
+  // if the card is an Ace, change the hasAce indicator on the hand to true
+  if (card.val === 'A') {
+    this.hasAce = true;
+  }
   this.cards.push(card);
 };
 
@@ -269,6 +274,11 @@ Hand.prototype.calcPoints = function() {
   // last card in the array is the last card dealt
   var cardIndex = (this.cards.length) - 1;
   this.points += this.cards[cardIndex].points;
+  // adjust the points on the hand for Ace, but only if the total points are higher than 21
+  if (this.hasAce && this.points > 21) {
+    this.points -= 10; // subtract 10 from the hand value (essentially making Ace a 1)
+    this.hasAce = false; // change the indicator back to false
+  }
 };
 
 // set stay to true
