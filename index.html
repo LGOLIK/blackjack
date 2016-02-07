@@ -10,61 +10,65 @@
   <body>
     <div class="container">
       <br>
-      <div class="row">
-        <div class="twelve columns">
-          <header>
-            <h1>Blackjack</h1>
-          </header>
-        </div>
-      </div>
-      <div class="row">
-        <div class="twelve columns">
-          <div class="dealer-header">
+      <header>
+        <div class="row">
+          <div class="twelve columns">
+              <h1>Blackjack</h1>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="twelve columns">
-          <div class="dealer" id="0">
+      </header>
+      <div class="gameboard">
+        <div class="dealer view">
+          <div class="row">
+            <div class="twelve columns">
+              <div class="dealer-header">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="twelve columns">
+              <div class="dealer" id="0">
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="twelve columns">
-          <div class="player-header">
+        <div class="player view">
+          <div class="row">
+            <div class="twelve columns">
+              <div class="player-header">
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="twelve columns">
-          <div class="player" id="1">
+          <div class="row">
+            <div class="twelve columns">
+              <div class="player" id="1">
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="twelve columns">
         </div>
       </div>
       <br>
-      <div class="row">
-        <div class="six columns" id="messageboard">
-          <h5 id="message">Place a bet to start the game</h5>
-        </div>
-        <!-- <div class="six columns">&nbsp;</div> -->
-      </div>
-      <div class="row">
-        <div class="six columns">
-          <input class="button-primary bet" type="button" value="10">
-          <input class="button-primary bet" type="button" value="25">
-          <input class="button-primary bet" type="button" value="50">
-          <input class="button-primary bet" type="button" value="100">
-          <div class="play">
-            <input class="button-primary hit" type="button" value="hit">
-            <input class="button-primary stand" type="button" value="stand">
+      <div class="messageboard">
+        <div class="row">
+          <div class="nine columns">
+            <h5 id="message">Place a bet to start the game</h5>
           </div>
-          <input class="button-primary end" type="button" value="play again">
         </div>
-        <!-- <div class="six columns">&nbsp;</div> -->
+      </div>
+      <div class="action-buttons">
+        <div class="row">
+          <div class="nine columns">
+            <input class="button-primary bet" type="button" value="10">
+            <input class="button-primary bet" type="button" value="25">
+            <input class="button-primary bet" type="button" value="50">
+            <input class="button-primary bet" type="button" value="100">
+            <div class="play">
+              <input class="button-primary hit" type="button" value="hit">
+              <input class="button-primary stand" type="button" value="stay">
+            </div>
+            <input class="button-primary end" type="button" value="play again">
+          </div>
+        </div>
       </div>
       <div class="bankroll">
         <div class="row">

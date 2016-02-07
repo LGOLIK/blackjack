@@ -122,12 +122,12 @@ function $endMessage(winner, winnerID, loser, loserID, bank, bet) {
     $('#message').text('Well that sucks! You busted. Try making up for it by playing again!');
   } else if (loserID === 0 && loser.bust) { // the dealer busted
     $('#message').text('Sweet! The dealer busted. You win ' + bet + '.');
-  } else if (winnerID === 0) {
+  } else if (winnerID === 0) { // the dealer had a higher score
     $('#message').text('You lose! You have ' + loser.points + ', while the dealer has ' + winner.points + '. Play again and turn your luck around.');
-  } else if (winnerID > 0) {
-    $('#message').text('You win ' + bet + '! You have ' + winner.points + ', while the dealer has ' + loser.points + '. Play again and turn your luck around.');
-  } else if (winnerID < 0) {
-    $('#message').text('You tied. Still in the game! May the odds be ever in your favor');
+  } else if (winnerID > 0) { // player had a higher score
+    $('#message').text('You win ' + bet + '! You have ' + winner.points + ', while the dealer has ' + loser.points + '. Play again to keep the momentum going!');
+  } else if (winnerID < 0) { // it's a tie
+    $('#message').text('You tied. You got ' + bet + ' back! May the odds be ever in your favor.');
   } else {
     $('#message').text('Something is wrong.');
   }
