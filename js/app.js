@@ -22,8 +22,13 @@ $(function() {
 
   // when the play again button is clicked
   $('.end').on('click', function $startOver() {
-    $('#betAmt').text(''); // clear out the bet
-
+    event.stopProbagation;
+    $('.end').hide(); // hide the play again button
+    $('.bet').show(); // show the bet buttons, which call the start game function
+    $('#message').text('Place a bet to start the game'); // change the message text
+    $('.card').remove(); // remove all of the cards
+    $('.dealer-header').empty(); // remove the dealer children
+    $('.player-header').empty(); // remove the player header children
   });
 });
 
@@ -31,6 +36,7 @@ $(function() {
 
 function $startGame() {
   event.stopProbagation;
+  game.start(); // start the game object
   var bet = parseInt($(this).val()); // bet is the value of the button clicked
   var bank = parseInt($('#bankAmt').text()); // bank is the amount in the bank box
   $startBank(bet, bank);
@@ -39,7 +45,6 @@ function $startGame() {
   $('.dealer-header').append("<h5>Dealer's cards</h5>");
   $('.player-header').append("<h5>Your cards</h5>");
 
-  game.start(); // start the game object
   $startDeal(); // deal the starting hands
   $checkWinner(); // check for a winner
 } // end $start
@@ -122,12 +127,12 @@ function $endMessage(winner, winnerID, loser, loserID, bank, bet) {
     $('#message').text('Well that sucks! You busted. Try making up for it by playing again!');
   } else if (loserID === 0 && loser.bust) { // the dealer busted
     $('#message').text('Sweet! The dealer busted. You win ' + bet + '.');
-  } else if (winnerID === 0) {
+  } else if (winnerID === 0) { // the dealer had a higher score
     $('#message').text('You lose! You have ' + loser.points + ', while the dealer has ' + winner.points + '. Play again and turn your luck around.');
-  } else if (winnerID > 0) {
-    $('#message').text('You win ' + bet + '! You have ' + winner.points + ', while the dealer has ' + loser.points + '. Play again and turn your luck around.');
-  } else if (winnerID < 0) {
-    $('#message').text('You tied. Still in the game! May the odds be ever in your favor');
+  } else if (winnerID > 0) { // player had a higher score
+    $('#message').text('You win ' + bet + '! You have ' + winner.points + ', while the dealer has ' + loser.points + '. Play again to keep the momentum going!');
+  } else if (winnerID < 0) { // it's a tie
+    $('#message').text('You tied. You got ' + bet + ' back! May the odds be ever in your favor.');
   } else {
     $('#message').text('Something is wrong.');
   }
@@ -288,19 +293,17 @@ Hand.prototype.isBlackjack = function () {
 
 // game object
 var game = {
-  players: [], // will store a hand objects for all players
-  currPlayer: '',
-  deck: [], // initially a blank array
-  winner: '', // will store the winner (1 or 0)
-  loser: '', // will store the loser
-  // start the game function
   start: function() {
+    // reset the properties on the game
+    this.deck = [];
+    this.players = []; // will store a hand objects for all players
+    this.currPlayer = ''; // 1 = player, 0 = dealer
+    this.winner = ''; // 1 or 0
+    this.loser = ''; // 1 or 0
     // create new hand objects for the player and dealer
     this.players.push(new Hand(0)); // dealer - ideally the game could be expanded to pass through the number of players
     this.players.push(new Hand(1)); // player
     this.currPlayer = this.players.length-1; // set the curr player indicator to the last player in the array
-    this.winner = ''; // reset the winner
-    this.loser = ''; // reset the loser
 
     // make and shuffle a new deck
     this.deck = makeDeck();
