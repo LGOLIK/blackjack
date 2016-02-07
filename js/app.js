@@ -15,8 +15,9 @@ $(function() {
 
   // when the stand button is clicked
   $('.stand').on('click', function $stand(){
-    game.dealerMoves(); // it's the dealer's turn
-    $checkWinner(); // check for a winner
+    game.dealerMoves(); // perform the dealer's moves
+    $showDealer(); // show the dealer's cards on the page
+    $endGame(); // end the game
   });
 
   // when the play again button is clicked
@@ -45,14 +46,14 @@ function $startGame() {
 
 function $hit() {
   var currPlayer = game.currPlayer;
-  var allPlayers = game.players;
-  var lastCard = allPlayers[currPlayer].cards.length-1
-  var cardName = allPlayers[currPlayer].cards[lastCard].val;
-  var cardSuit = allPlayers[currPlayer].cards[lastCard].suit;
-
   game.hit(game.players[currPlayer]); // hit the deck card
-  // game.bust(game.players[currPlayer]);
-  $dealCard(currPlayer, cardName, cardSuit); // display that card on the page
+
+  var lastCardID = game.players[currPlayer].cards.length-1;
+  var lastCard = game.players[currPlayer].cards[lastCardID];
+  var lastCardName = lastCard.val;
+  var lastCardSuit = lastCard.suit;
+
+  $dealCard(currPlayer, lastCardName, lastCardSuit); // display that card on the page
   $checkWinner(); // check for a winner
 } // end $hit
 
@@ -160,6 +161,21 @@ function $startDeal() {
   var fourthSuit = hands[dealer].cards[1].suit;
   $dealCard(dealer, fourthName, fourthSuit);
 } // end $startDeal function
+
+// function to show the dealer hand
+function $showDealer() {
+  var dealerHand = game.players[0].cards
+  // placeholder to show the hidden dealer card
+
+  // show any additional cards dealt on the screen
+  if (dealerHand.length > 2) { // if the dealer made any hits
+    for (var i = 2; i < dealerHand.length; i++) { // start at the 3rd card
+      var cardName = dealerHand[i].val;
+      var cardSuit = dealerHand[i].suit;
+      $dealCard(0, cardName, cardSuit);
+    }
+  }
+} // end of $showDealer
 
 // this function is used at the start of a game, as well as when a card is being hit
 // p is the number signifying the player, n is the name of the card, s is the suit of the card
