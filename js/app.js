@@ -7,7 +7,24 @@ $(function() {
 
   // when one of the bet buttons is clicked, start the game
   $('.bet').on('click', $startGame);
+  var bet = parseInt($(this).val()); // bet is the value of the button clicked
+  var bank = parseInt($('#bankAmt').text()); // bank is the amount in the bank box
 
+  // when the hit button is clicked
+  $('.hit').on('click', $hit);
+
+  // when the stand button is clicked
+  $('.stand').on('click', function $stand(){
+    game.dealerMoves(); // perform the dealer's moves
+    $showDealer(); // show the dealer's cards on the page
+    $endGame(); // end the game
+  });
+
+  // when the play again button is clicked
+  $('.end').on('click', function $startOver() {
+    $('#betAmt').text(''); // clear out the bet
+
+  });
 });
 
 // functions and object constructors go here
@@ -18,15 +35,40 @@ function $startGame() {
   var bank = parseInt($('#bankAmt').text()); // bank is the amount in the bank box
   $startBank(bet, bank);
   $('.bet').hide(); // hide the bet buttons
-  game.start(); // start the game object
   // add the player and dealer headers
   $('.dealer-header').append("<h5>Dealer's cards</h5>");
   $('.player-header').append("<h5>Your cards</h5>");
 
-  // deal the 2 cards in alternating order on the page
-
-
+  game.start(); // start the game object
+  $startDeal(); // deal the starting hands
+  $checkWinner(); // check for a winner
 } // end $start
+
+function $hit() {
+  var currPlayer = game.currPlayer;
+  game.hit(game.players[currPlayer]); // hit the deck card
+
+  var lastCardID = game.players[currPlayer].cards.length-1;
+  var lastCard = game.players[currPlayer].cards[lastCardID];
+  var lastCardName = lastCard.val;
+  var lastCardSuit = lastCard.suit;
+
+  $dealCard(currPlayer, lastCardName, lastCardSuit); // display that card on the page
+  $checkWinner(); // check for a winner
+} // end $hit
+
+// function to check for a winner - should be used over multiple iterations
+function $checkWinner() {
+  // check for a winner. if there is one, end the game, since there's only 2 players
+  if (game.winner !== '') {
+    $endGame();
+  } else {
+    // get the current player
+    var currPlayer = game.currPlayer;
+    $('.play').show();
+    $('#message').text('You have ' + game.players[currPlayer].points + '. Hit or Stand?');
+  }
+}
 
 // function to update the bet and bank at the start of the game
 function $startBank(bet, bank) {
@@ -39,12 +81,109 @@ function $startBank(bet, bank) {
   }
 } // end $startBank
 
-// this function is used at the start of a game, as well as when a card is being hit
-// p is the hand of the player being dealt
-function $dealCard(p) {
-  //
-} // end $dealCard
+//function to end the game, passing through the winning player object
+function $endGame() {
+  var currPlayer = game.currPlayer;
+  var winnerID = game.winner;
+  var winner = game.players[winnerID];
+  var loserID = game.loser;
+  var loser = game.players[loserID];
+  var bank = parseInt($('#bankAmt').text());
+  var bet = parseInt($('#betAmt').text());
+  // placeholder to show dealer cards
 
+  $endMessage(winner, winnerID, loser, loserID, bank, bet); // update the message bar
+  $endBank(winner, winnerID, bank, bet); // update the bet and bank values
+
+  $('.play').hide(); // hide the play buttons
+  $('.end').show();  // show the end of game button
+}
+
+// function to update the bank at the end of the game
+function $endBank(winner, winnerID, bank, bet) {
+  if (winnerID > 0 && winner.blackjack) { // if winner is not the dealer
+    bank += bet * 2.5; // to add original bet back, and to pay out 1.5 on the bet
+  } else if (winnerID > 0) {
+    bank += bet * 2;
+  } else if (winnerID < 0) { // there's a tie
+    bank += bet;
+  }
+  $('#bankAmt').text(bank); // updated bank amount on the bank view
+  $('#betAmt').text(''); // clear the bet amount
+} // end $endBank
+
+// function to display end game message based on various scenarios.
+function $endMessage(winner, winnerID, loser, loserID, bank, bet) {
+  if (winnerID > 0 && game.players[winnerID].blackjack) { // player got a blackjack
+    $('#message').text('Awesome! You got a blackjack! You win 3 to 2 on your bet. Keep the money rolling and play again!');
+  } else if (winnerID === 0 && game.players[winnerID].blackjack) { // dealer got a blackjack
+    $('#message').text('Ugh! The dealer got a blackjack! Keep on playing anyways!');
+  } else if (loserID > 0 && loser.bust) { // player busted
+    $('#message').text('Well that sucks! You busted. Try making up for it by playing again!');
+  } else if (loserID === 0 && loser.bust) { // the dealer busted
+    $('#message').text('Sweet! The dealer busted. You win ' + bet + '.');
+  } else if (winnerID === 0) {
+    $('#message').text('You lose! You have ' + loser.points + ', while the dealer has ' + winner.points + '. Play again and turn your luck around.');
+  } else if (winnerID > 0) {
+    $('#message').text('You win ' + bet + '! You have ' + winner.points + ', while the dealer has ' + loser.points + '. Play again and turn your luck around.');
+  } else if (winnerID < 0) {
+    $('#message').text('You tied. Still in the game! May the odds be ever in your favor');
+  } else {
+    $('#message').text('Something is wrong.');
+  }
+} // end of $endMessage
+
+// function to deal the starting hand
+function $startDeal() {
+  // deal the 2 cards in alternating order on the page
+  var hands = game.players;
+  var currPlayer = game.currPlayer;
+  var dealer = currPlayer-1;
+  var firstCard = game.players[currPlayer].cards[0];
+
+  // player first card
+  var firstName = hands[currPlayer].cards[0].val;
+  var firstSuit = hands[currPlayer].cards[0].suit;
+  $dealCard(currPlayer, firstName, firstSuit);
+
+  // dealer first card
+  var secondName = hands[dealer].cards[0].val;
+  var secondSuit = hands[dealer].cards[0].suit;
+  $dealCard(dealer, secondName, secondSuit);
+
+  // player second card
+  var thirdName = hands[currPlayer].cards[1].val;
+  var thirdSuit = hands[currPlayer].cards[1].suit;
+  $dealCard(currPlayer, thirdName, thirdSuit);
+
+  // dealer second card
+  var fourthName = hands[dealer].cards[1].val;
+  var fourthSuit = hands[dealer].cards[1].suit;
+  $dealCard(dealer, fourthName, fourthSuit);
+} // end $startDeal function
+
+// function to show the dealer hand
+function $showDealer() {
+  var dealerHand = game.players[0].cards
+  // placeholder to show the hidden dealer card
+
+  // show any additional cards dealt on the screen
+  if (dealerHand.length > 2) { // if the dealer made any hits
+    for (var i = 2; i < dealerHand.length; i++) { // start at the 3rd card
+      var cardName = dealerHand[i].val;
+      var cardSuit = dealerHand[i].suit;
+      $dealCard(0, cardName, cardSuit);
+    }
+  }
+} // end of $showDealer
+
+// this function is used at the start of a game, as well as when a card is being hit
+// p is the number signifying the player, n is the name of the card, s is the suit of the card
+function $dealCard(p, n, s) {
+  // add formatted card elements to the id of the player
+  // assigning each newly created div class of card and suit to make sure they are unique items that a child can be appended to
+  $("<div>").appendTo('#' + p).attr("class", "card").addClass(s).addClass(n).append("<p>" + n + "&" + s + ";</p>");
+} // end $dealCard
 
 // function to build a new deck of card objects
 function makeDeck() {
@@ -104,8 +243,8 @@ function Card(suit, val) {
 }
 
 // hand constructor - dealer or player will pass through this hand when called
-function Hand() {
-  // this.player = player; // will store 1 to signify player, or 0 to signify dealer
+function Hand(p) {
+  this.player = p; // will store 1 to signify player, or 0 to signify dealer
   this.cards = []; // to store an array of card objects
   this.points = 0; // to store the running total of points on the hand
   this.hits = 0; // to keep track of the number of hits made
@@ -150,7 +289,6 @@ Hand.prototype.isBlackjack = function () {
 // game object
 var game = {
   players: [], // will store a hand objects for all players
-  // dealer: '', // will store another hand object
   currPlayer: '',
   deck: [], // initially a blank array
   winner: '', // will store the winner (1 or 0)
@@ -158,10 +296,8 @@ var game = {
   // start the game function
   start: function() {
     // create new hand objects for the player and dealer
-    // this.player = new Hand(1);
-    // this.dealer = new Hand(0);
-    this.players.push(new Hand()); // dealer
-    this.players.push(new Hand()); // player
+    this.players.push(new Hand(0)); // dealer - ideally the game could be expanded to pass through the number of players
+    this.players.push(new Hand(1)); // player
     this.currPlayer = this.players.length-1; // set the curr player indicator to the last player in the array
     this.winner = ''; // reset the winner
     this.loser = ''; // reset the loser
@@ -178,16 +314,19 @@ var game = {
     // check for a blackjack
     this.blackjack();
   }, // end of start game
+
   // deal a card
   hit: function(p) {
     // get the first card from the deck
     var card = this.deck.shift();
     p.addCard(card); // add card
     p.calcPoints(); // calc points on the hand
-    if (p.cards.length > 2) { // add to hit count if more than 2 cards on the hand
-      p.hits++;
+    if (p.cards.length > 2) {
+      p.hits++; // add to hit count
+      this.bust(p); // set winner and loser if there's a bust
     }
   }, // end of hit
+
   // stay
   stay: function(p) {
     // change the hand stay status to true
@@ -195,6 +334,7 @@ var game = {
     // change current player to the dealer
     this.currPlayer--; // subtract 1 from the curr player (1) to get to the dealer (0)
   },
+
   blackjack: function() {
     // check for blackjack on all players
     // only happens after the first 2 cards are dealt when game starts
@@ -206,19 +346,8 @@ var game = {
         this.winner = i;
       }
     }
-    // this.player.isBlackjack();
-    // this.dealer.isBlackjack();
-
-    // set a winner if there's a blackjack
-    // if ((this.player.blackjack && this.dealer.blackjack) || this.player.blackjack ) { // if both winner and player get blackjack, or the player gets blackjack
-    // // if (this.player.blackjack) { // if both winner and player get blackjack, or the player gets blackjack
-    //   this.winner = 1; // player is the winner
-    //   this.loser = 0;
-    // } else if (this.dealer.blackjack) { // if player has blackjack
-    //   this.winner = 0; // dealer is the winner
-    //   this.loser = 1;
-    // }
   }, // end of blackjack
+
   bust: function(p) {
     // determine winner, based whether a player has busted
     p.isBust(); // check the hand for a bust
@@ -232,6 +361,7 @@ var game = {
       }
     }
   }, // end of bust
+
   isWinner: function() { // this should only be called after a dealer stay
     var player = this.players[1].points;
     var dealer = this.players[0].points;
@@ -247,6 +377,7 @@ var game = {
       this.loser = this.currPlayer; // set to -1
     }
   }, // end of iswinner
+
   dealerMoves: function() {
     // hit while the dealer hand point value is less than 17 and the dealer has made less than 5 hits
     while (this.players[0].points < 17 && this.players[0].hits < 5) {
