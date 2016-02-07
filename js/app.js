@@ -46,29 +46,30 @@ function $startGame() {
   $('.player-header').append("<h5>Your cards</h5>");
 
   $startDeal(); // deal the starting hands
+  // set the first dealer card to have the same color as the background
+  $('.card p:first').css("color", "white");
   $checkWinner(); // check for a winner
 } // end $start
 
 function $hit() {
   var currPlayer = game.currPlayer;
-  game.hit(game.players[currPlayer]); // hit the deck card
+  game.hit(game.players[currPlayer]); // deal the current player a card
 
+  // these variables can only be defined after the card is dealt
   var lastCardID = game.players[currPlayer].cards.length-1;
   var lastCard = game.players[currPlayer].cards[lastCardID];
-  var lastCardName = lastCard.val;
-  var lastCardSuit = lastCard.suit;
 
-  $dealCard(currPlayer, lastCardName, lastCardSuit); // display that card on the page
+  $dealCard(currPlayer, lastCard.val, lastCard.suit); // display that card on the page
   $checkWinner(); // check for a winner
 } // end $hit
 
-// function to check for a winner - should be used over multiple iterations
+// function to check for a winner - used in $hit and $start events
 function $checkWinner() {
   // check for a winner. if there is one, end the game, since there's only 2 players
   if (game.winner !== '') {
     $endGame();
   } else {
-    // get the current player
+    // there is no winner yet and the current player should be making a move
     var currPlayer = game.currPlayer;
     $('.play').show();
     $('#message').text('You have ' + game.players[currPlayer].points + '. Hit or Stand?');
@@ -95,7 +96,8 @@ function $endGame() {
   var loser = game.players[loserID];
   var bank = parseInt($('#bankAmt').text());
   var bet = parseInt($('#betAmt').text());
-  // placeholder to show dealer cards
+  // now show the dealer's first card value
+  $('.card p:first').css("color", "");
 
   $endMessage(winner, winnerID, loser, loserID, bank, bet); // update the message bar
   $endBank(winner, winnerID, bank, bet); // update the bet and bank values
@@ -170,7 +172,6 @@ function $startDeal() {
 // function to show the dealer hand
 function $showDealer() {
   var dealerHand = game.players[0].cards
-  // placeholder to show the hidden dealer card
 
   // show any additional cards dealt on the screen
   if (dealerHand.length > 2) { // if the dealer made any hits
